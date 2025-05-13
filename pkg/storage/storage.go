@@ -6,7 +6,6 @@ import (
 	"github.com/botashev/tasks-executor/pkg/models"
 )
 
-// Storage defines the interface for task and executor storage
 type Storage interface {
 	// Executor operations
 	CreateExecutor(ctx context.Context, config *models.ExecutorConfig) error
@@ -25,7 +24,6 @@ type Storage interface {
 	ClearDLQ(ctx context.Context, executorName string) error
 }
 
-// StorageConfig holds configuration for storage implementations
 type StorageConfig struct {
 	MongoURI      string
 	Database      string

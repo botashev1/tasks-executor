@@ -9,12 +9,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// Manager представляет клиент для взаимодействия с менеджером задач
 type Manager struct {
 	client pb.TaskExecutorManagerClient
 }
 
-// NewManager создает новый экземпляр менеджера
 func NewManager(address string) (*Manager, error) {
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -27,7 +25,6 @@ func NewManager(address string) (*Manager, error) {
 	}, nil
 }
 
-// RegisterExecutor регистрирует обработчик в системе
 func (m *Manager) RegisterExecutor(executorName string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -38,7 +35,6 @@ func (m *Manager) RegisterExecutor(executorName string) error {
 	return err
 }
 
-// GetNextTask получает следующую задачу для обработки
 func (m *Manager) GetNextTask(executorName string) (*pb.Task, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -52,7 +48,6 @@ func (m *Manager) GetNextTask(executorName string) (*pb.Task, error) {
 	return resp.Task, nil
 }
 
-// UpdateTaskStatus обновляет статус задачи
 func (m *Manager) UpdateTaskStatus(taskID string, status pb.TaskStatus, errorMsg string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

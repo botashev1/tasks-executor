@@ -25,7 +25,6 @@ func NewService(storage storage.Storage) *Service {
 	}
 }
 
-// Task Management
 func (s *Service) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.AddTaskResponse, error) {
 	task := &models.Task{
 		ExecutorName: req.ExecutorName,
@@ -60,10 +59,7 @@ func (s *Service) GetTaskStatus(ctx context.Context, req *pb.GetTaskStatusReques
 	}, nil
 }
 
-// Executor Management
 func (s *Service) RegisterExecutor(ctx context.Context, req *pb.RegisterExecutorRequest) (*pb.RegisterExecutorResponse, error) {
-	// In a real implementation, we would track active executors
-	// For now, we just verify the executor exists
 	executor, err := s.storage.GetExecutor(ctx, req.ExecutorName)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -130,7 +126,6 @@ func (s *Service) UpdateTaskStatus(ctx context.Context, req *pb.UpdateTaskStatus
 	return &pb.UpdateTaskStatusResponse{Task: convertTaskToProto(task)}, nil
 }
 
-// Executor Configuration
 func (s *Service) CreateExecutor(ctx context.Context, req *pb.CreateExecutorRequest) (*pb.CreateExecutorResponse, error) {
 	if req == nil || req.Config == nil {
 		return nil, status.Error(codes.InvalidArgument, "request or config is nil")
@@ -143,14 +138,12 @@ func (s *Service) CreateExecutor(ctx context.Context, req *pb.CreateExecutorRequ
 		UpdatedAt: time.Now(),
 	}
 
-	// WriteConcern
 	if req.Config.WriteConcern != nil {
 		config.WriteConcern = models.WriteConcern{
 			Level: convertProtoWriteConcernLevel(req.Config.WriteConcern.Level),
 		}
 	}
 
-	// RetryPolicy
 	if req.Config.RetryPolicy != nil {
 		config.RetryPolicy = models.RetryPolicy{
 			Type:        convertProtoRetryPolicyType(req.Config.RetryPolicy.Type),
@@ -159,7 +152,6 @@ func (s *Service) CreateExecutor(ctx context.Context, req *pb.CreateExecutorRequ
 		}
 	}
 
-	// DLQConfig
 	if req.Config.DlqConfig != nil {
 		config.DLQConfig = models.DLQConfig{
 			Enabled:   req.Config.DlqConfig.Enabled,
@@ -236,7 +228,6 @@ func (s *Service) ListExecutors(ctx context.Context, req *pb.ListExecutorsReques
 	}, nil
 }
 
-// DeleteExecutor deletes an executor by its name (id)
 func (s *Service) DeleteExecutor(ctx context.Context, req *pb.DeleteExecutorRequest) (*pb.DeleteExecutorResponse, error) {
 	if req == nil || req.Id == "" {
 		return nil, status.Error(codes.InvalidArgument, "id is required")
@@ -247,7 +238,6 @@ func (s *Service) DeleteExecutor(ctx context.Context, req *pb.DeleteExecutorRequ
 	return &pb.DeleteExecutorResponse{}, nil
 }
 
-// Helper functions
 func convertTaskStatus(status models.TaskStatus) pb.TaskStatus {
 	switch status {
 	case models.TaskStatusPending:
@@ -359,7 +349,7 @@ func convertProtoRetryPolicyType(policyType pb.RetryPolicyType) models.RetryPoli
 
 func shouldRetry(policy models.RetryPolicy, retryCount int) bool {
 	if policy.MaxAttempts == 0 {
-		return true // Unlimited retries
+		return true
 	}
 	return retryCount < policy.MaxAttempts
 }
@@ -429,19 +419,16 @@ func convertProtoExecutorConfig(config *models.ExecutorConfig) *pb.ExecutorConfi
 		Enabled: config.Enabled,
 	}
 
-	// WriteConcern
 	result.WriteConcern = &pb.WriteConcern{
 		Level: convertWriteConcernLevel(config.WriteConcern.Level),
 	}
 
-	// RetryPolicy
 	result.RetryPolicy = &pb.RetryPolicy{
 		Type:        convertRetryPolicyType(config.RetryPolicy.Type),
 		MaxAttempts: int32(config.RetryPolicy.MaxAttempts),
 		Interval:    durationpb.New(config.RetryPolicy.Interval),
 	}
 
-	// DLQConfig
 	result.DlqConfig = &pb.DLQConfig{
 		Enabled:   config.DLQConfig.Enabled,
 		QueueName: config.DLQConfig.QueueName,

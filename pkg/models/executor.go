@@ -6,7 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// ExecutorConfig represents the configuration for a task executor
 type ExecutorConfig struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty"`
 	Name         string             `bson:"name"`
@@ -18,7 +17,6 @@ type ExecutorConfig struct {
 	UpdatedAt    time.Time          `bson:"updated_at"`
 }
 
-// WriteConcern represents MongoDB write concern settings
 type WriteConcern struct {
 	Level WriteConcernLevel `bson:"level"`
 }
@@ -32,10 +30,9 @@ const (
 	WriteConcernJournaled           WriteConcernLevel = "journaled"
 )
 
-// RetryPolicy defines how failed tasks should be retried
 type RetryPolicy struct {
 	Type        RetryPolicyType `bson:"type"`
-	MaxAttempts int             `bson:"max_attempts"` // 0 means unlimited
+	MaxAttempts int             `bson:"max_attempts"`
 	Interval    time.Duration   `bson:"interval"`
 }
 
@@ -47,13 +44,11 @@ const (
 	RetryPolicyExponential RetryPolicyType = "exponential"
 )
 
-// DLQConfig represents Dead Letter Queue configuration
 type DLQConfig struct {
 	Enabled   bool   `bson:"enabled"`
 	QueueName string `bson:"queue_name"`
 }
 
-// Task represents a single task in the system
 type Task struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty"`
 	ExecutorName string             `bson:"executor_name"`
@@ -78,16 +73,11 @@ const (
 	TaskStatusDLQ        TaskStatus = "dlq"
 )
 
-// TaskProcessor defines the interface that all task processors must implement
 type TaskProcessor interface {
-	// ProcessTask processes a single task
 	ProcessTask(task *Task) error
-	// GetTaskSchema returns the JSON schema for the task data
 	GetTaskSchema() string
 }
 
-// TaskProcessorFactory creates new task processors
 type TaskProcessorFactory interface {
-	// CreateProcessor creates a new processor for the given executor
 	CreateProcessor(config *ExecutorConfig) (TaskProcessor, error)
 }

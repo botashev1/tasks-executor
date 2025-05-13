@@ -5,7 +5,7 @@ package taskexecutor;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
-option go_package = "github.com/botashev/tasks-executor/proto/taskexecutor";
+option go_package = "github.com/botashev/tasks-executor/proto";
 
 // Task Executor Service - Manager API
 service TaskExecutorManager {
@@ -188,21 +188,3 @@ enum TaskStatus {
   TASK_STATUS_FAILED = 4;
   TASK_STATUS_DLQ = 5;
 }
-
-// Order представляет заказ
-message Order {
-    string id = 1;
-    string user_id = 2;
-    repeated OrderItem items = 3;
-    double total = 4;
-    string status = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
-}
-
-// OrderItem представляет товар в заказе
-message OrderItem {
-    string product_id = 1;
-    int32 quantity = 2;
-    double price = 3;
-} 

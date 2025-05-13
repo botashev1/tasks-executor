@@ -20,7 +20,6 @@ type mongoStorage struct {
 	dlqColl       *mongo.Collection
 }
 
-// NewMongoStorage creates a new MongoDB storage implementation
 func NewMongoStorage(config StorageConfig) (Storage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -35,7 +34,6 @@ func NewMongoStorage(config StorageConfig) (Storage, error) {
 	tasksColl := db.Collection(config.TasksColl)
 	dlqColl := db.Collection(config.DLQColl)
 
-	// Create indexes
 	_, err = executorsColl.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys:    bson.D{{Key: "name", Value: 1}},
 		Options: options.Index().SetUnique(true),
@@ -65,7 +63,6 @@ func NewMongoStorage(config StorageConfig) (Storage, error) {
 	}, nil
 }
 
-// Executor operations
 func (s *mongoStorage) CreateExecutor(ctx context.Context, config *models.ExecutorConfig) error {
 	_, err := s.executorsColl.InsertOne(ctx, config)
 	return err
@@ -109,7 +106,6 @@ func (s *mongoStorage) DeleteExecutor(ctx context.Context, name string) error {
 	return err
 }
 
-// Task operations
 func (s *mongoStorage) AddTask(ctx context.Context, task *models.Task) error {
 	task.CreatedAt = time.Now()
 	task.UpdatedAt = time.Now()
@@ -171,7 +167,6 @@ func (s *mongoStorage) UpdateTaskStatus(ctx context.Context, id string, status m
 }
 
 func (s *mongoStorage) GetNextTask(ctx context.Context, executorName string) (*models.Task, error) {
-	// Find and update atomically
 	filter := bson.M{
 		"executor_name": executorName,
 		"status":        models.TaskStatusPending,
@@ -197,12 +192,10 @@ func (s *mongoStorage) GetNextTask(ctx context.Context, executorName string) (*m
 }
 
 func (s *mongoStorage) MoveToDLQ(ctx context.Context, task *models.Task) error {
-	// First, update the task status
 	if err := s.UpdateTaskStatus(ctx, task.ID.Hex(), models.TaskStatusDLQ, task.Error); err != nil {
 		return err
 	}
 
-	// Then, copy to DLQ collection
 	_, err := s.dlqColl.InsertOne(ctx, task)
 	return err
 }
