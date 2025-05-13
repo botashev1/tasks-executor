@@ -34,32 +34,20 @@ Tasks Executor предоставляет инфраструктуру для н
 
 ### Требования
 - Go 1.22+
-- Docker и docker-compose (для быстрого старта)
+- Docker и docker-compose
 
 ### Запуск через Docker
 
-Для быстрого запуска всего проекта (backend + MongoDB) используйте Docker и docker-compose:
+Для запуска проекта (backend + MongoDB + frontend):
 
 ```bash
 git clone https://github.com/yourusername/tasks-executor.git
 cd tasks-executor
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 - Backend будет доступен на: [http://localhost:8080/](http://localhost:8080/)
 - MongoDB: `localhost:27017`
-
-### Локальный запуск backend
-
-Если хотите запускать backend локально (без Docker):
-
-```bash
-go mod download
-go build -o manager ./cmd/manager
-./manager
-```
-
-> **MongoDB** должна быть запущена отдельно (например, через Docker или как сервис).
 
 ### Веб-интерфейс
 
@@ -76,13 +64,13 @@ SDK позволяет реализовать собственные обраб�
 package main
 
 import (
-    "context"
-    "github.com/yourusername/tasks-executor/pkg/sdk"
+    "github.com/botashev/tasks-executor/pkg/sdk"
+    "github.com/botashev/tasks-executor/pkg/models"
 )
 
 type MyTaskHandler struct{}
 
-func (h *MyTaskHandler) ProcessTask(task *sdk.Task) error {
+func (h *MyTaskHandler) ProcessTask(task *models.Task) error {
     // Ваша логика обработки задачи
     return nil
 }
@@ -96,4 +84,29 @@ func main() {
     // ... запуск сервиса
 }
 ```
+
+## API
+
+- gRPC и REST API описаны в файле `proto/task_executor.proto`.
+- Основные сущности: Executor, Task, DLQ.
+- REST API доступен по префиксу `/api/v1`.
+
+## Очистка и массовое наполнение базы
+
+Для очистки коллекции обработчиков используйте:
+
+```bash
+docker compose exec mongodb mongosh --eval "db = db.getSiblingDB('task_executor'); db.executors.deleteMany({})"
+```
+
+Для массового наполнения базы обработчиками используйте CLI с однострочными JSON-конфигами (см. выше).
+
+## Контейнеризация
+
+- Все сервисы и MongoDB запускаются одной командой через Docker Compose.
+- Для разработки удобно использовать volume-монтирование фронтенда: изменения в `frontend/` сразу видны в контейнере.
+
+---
+
+**Tasks Executor** — современная платформа для асинхронной обработки задач с удобным UI, CLI и SDK.
 

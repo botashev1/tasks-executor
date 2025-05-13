@@ -69,14 +69,14 @@ func main() {
 		defer cancel()
 		resp, err := client.AddTask(ctx, &pb.AddTaskRequest{
 			ExecutorName: *name,
-			TaskData:     f,
+			Data:         f,
 			Metadata:     map[string]string{},
 		})
 		if err != nil {
 			fmt.Println("failed to add task:", err)
 			os.Exit(1)
 		}
-		fmt.Println("Task added! ID:", resp.TaskId)
+		fmt.Println("Task added! ID:", resp.Task.Id)
 	case "list-executors":
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()

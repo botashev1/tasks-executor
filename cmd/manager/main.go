@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	pb "github.com/botashev/tasks-executor/proto"
 
@@ -30,21 +31,38 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func connectToMongoDB(mongoURI string, maxRetries int) (storage.Storage, error) {
+	var store storage.Storage
+	var err error
+
+	for i := 0; i < maxRetries; i++ {
+		storageConfig := storage.StorageConfig{
+			MongoURI:      mongoURI,
+			Database:      "task_executor",
+			ExecutorsColl: "executors",
+			TasksColl:     "tasks",
+			DLQColl:       "dlq",
+		}
+		store, err = storage.NewMongoStorage(storageConfig)
+		if err == nil {
+			return store, nil
+		}
+		log.Printf("Failed to connect to MongoDB (attempt %d/%d): %v", i+1, maxRetries, err)
+		time.Sleep(2 * time.Second)
+	}
+	return nil, err
+}
+
 func main() {
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
 		mongoURI = "mongodb://localhost:27017"
 	}
-	storageConfig := storage.StorageConfig{
-		MongoURI:      mongoURI,
-		Database:      "task_executor",
-		ExecutorsColl: "executors",
-		TasksColl:     "tasks",
-		DLQColl:       "dlq",
-	}
-	store, err := storage.NewMongoStorage(storageConfig)
+
+	// Пытаемся подключиться к MongoDB с повторными попытками
+	store, err := connectToMongoDB(mongoURI, 5)
 	if err != nil {
-		log.Fatalf("failed to connect to MongoDB: %v", err)
+		log.Fatalf("Failed to connect to MongoDB after multiple attempts: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -64,14 +82,14 @@ func main() {
 		// admin_page.html отдаётся по / и /admin_page.html
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/" || r.URL.Path == "/admin_page.html" {
-				http.ServeFile(w, r, "./frontend/admin_page.html")
+				http.ServeFile(w, r, "/app/frontend/admin_page.html")
 				return
 			}
 			http.NotFound(w, r)
 		})
 		// Остальные файлы (assets, components) отдаются по своим путям
-		mux.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./frontend/assets"))))
-		mux.Handle("/components/", http.StripPrefix("/components", http.FileServer(http.Dir("./frontend/components"))))
+		mux.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("/app/frontend/assets"))))
+		mux.Handle("/components/", http.StripPrefix("/components", http.FileServer(http.Dir("/app/frontend/components"))))
 
 		// API routes
 		api := http.NewServeMux()
@@ -86,7 +104,9 @@ func main() {
 					return
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(resp)
+				json.NewEncoder(w).Encode(map[string]interface{}{
+					"executors": resp.Executors,
+				})
 			} else if r.Method == http.MethodPost {
 				// Create new executor
 				var req pb.CreateExecutorRequest
@@ -117,10 +137,11 @@ func main() {
 						return
 					}
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(resp)
+					json.NewEncoder(w).Encode(map[string]interface{}{
+						"executors": resp.Executors,
+					})
 					return
 				}
-				// Можно добавить POST для создания, если нужно
 			}
 
 			// Новый универсальный способ извлечения id

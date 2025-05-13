@@ -1,19 +1,48 @@
 version: '3.8'
+
 services:
-  mongo:
-    image: mongo:7
-    restart: always
+  # MongoDB для хранения задач и обработчиков
+  mongodb:
+    image: mongo:latest
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
-  backend:
-    build: .
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017
+      - mongodb_data:/data/db
+    networks:
+      - task_network
+
+  # Менеджер задач
+  manager:
+    build:
+      context: .
+      dockerfile: cmd/manager/Dockerfile
     ports:
-      - "8080:8080"
+      - "50051:50051"  # gRPC
+      - "8080:8080"    # HTTP для фронтенда
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    volumes:
+      - ./frontend:/app/frontend
+    depends_on:
+      - mongodb
+    networks:
+      - task_network
+
+  # Обработчик задач
+  executor:
+    build:
+      context: .
+      dockerfile: cmd/executor/Dockerfile
+    environment:
+      - MANAGER_ADDR=manager:50051
+    depends_on:
+      - manager
+    networks:
+      - task_network
+
+networks:
+  task_network:
+    driver: bridge
+
 volumes:
-  mongo_data: 
+  mongodb_data: 
