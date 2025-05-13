@@ -1,0 +1,96 @@
+<div id="settingsDrawer" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-blue-900 opacity-40" id="drawerBackdrop"></div>
+    <div class="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl flex flex-col transition-transform duration-300 transform translate-x-full" id="drawerPanel">
+        <div class="flex items-center justify-between px-8 py-6 border-b border-blue-100">
+            <h3 class="modal-title" id="modalTitle">Настройки обработчика</h3>
+            <button id="closeDrawer" type="button" class="text-gray-400 hover:text-gray-600 focus:outline-none text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="overflow-y-auto flex-1 px-8 py-6">
+            <form id="executorForm" class="space-y-8">
+                <div class="form-section">
+                    <div class="flex flex-col gap-6">
+                        <div>
+                            <label for="executorName" class="form-label block text-lg">Имя обработчика (в snake_case формате)</label>
+                            <input type="text" id="executorName" name="name"
+                                class="form-input pl-4 pr-4 mt-1 block w-full shadow-sm sm:text-lg focus:ring-blue-200 focus:border-blue-200 border-blue-100 bg-white"
+                                required autocomplete="off">
+                            <div id="executorNameNote" class="text-sm text-gray-500 mt-1 hidden flex items-center gap-1">
+                                <i class="fas fa-lock text-gray-400"></i>
+                                Имя обработчика нельзя изменить
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <input id="enabled" name="enabled" type="checkbox" class="blue-checkbox h-5 w-5 text-blue-400 focus:ring-blue-200 border-blue-200 rounded">
+                            <label for="enabled" class="ml-3 block text-lg text-gray-900 font-medium">Включён</label>
+                        </div>
+                        <div>
+                            <label for="writeConcern" class="form-label block text-lg">Mongo Write Concern</label>
+                            <select id="writeConcern" name="writeConcern" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-lg border-blue-100 focus:outline-none focus:ring-blue-200 focus:border-blue-200 sm:text-lg bg-white">
+                                <option value="write_concern_replica_acknowledged">Replica Acknowledged</option>
+                                <option value="write_concern_majority">Majority</option>
+                                <option value="write_concern_unacknowledged">Unacknowledged</option>
+                                <option value="write_concern_journaled">Journaled</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h4>Политика повторов</h4>
+                    <div class="flex flex-col gap-6">
+                        <div>
+                            <label for="retryPolicyType" class="form-label block text-lg">Тип</label>
+                            <select id="retryPolicyType" name="retryPolicy.type" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-lg border-blue-100 focus:outline-none focus:ring-blue-200 focus:border-blue-200 sm:text-lg bg-white">
+                                <option value="retry_policy_constant">Постоянный</option>
+                                <option value="retry_policy_linear">Линейный</option>
+                                <option value="retry_policy_exponential">Экспоненциальный</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="retryPolicyMaxAttempts" class="form-label block text-lg">Максимум попыток</label>
+                            <input type="number" id="retryPolicyMaxAttempts" name="retryPolicy.maxAttempts" class="form-input mt-1 block w-full shadow-sm sm:text-lg focus:ring-blue-200 focus:border-blue-200 border-blue-100 bg-white" placeholder="Пусто — без ограничений">
+                        </div>
+                        <div>
+                            <label for="retryPolicyInterval" class="form-label block text-lg">Интервал (мс)</label>
+                            <input type="number" id="retryPolicyInterval" name="retryPolicy.interval" class="form-input mt-1 block w-full shadow-sm sm:text-lg focus:ring-blue-200 focus:border-blue-200 border-blue-100 bg-white">
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg mt-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Пример политики</h4>
+                        <div id="retryPolicyPreview" class="text-lg text-gray-900"></div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h4>Dead Letter Queue</h4>
+                    <div class="flex flex-col gap-6">
+                        <div class="flex items-center mb-2">
+                            <input id="dlqEnabled" name="dlqSettings.enabled" type="checkbox" class="blue-checkbox h-5 w-5 text-blue-400 focus:ring-blue-200 border-blue-200 rounded">
+                            <label for="dlqEnabled" class="ml-3 block text-lg text-gray-900 font-medium">Включить Dead Letter Queue</label>
+                        </div>
+                        <div id="dlqSettingsContainer" class="space-y-4 hidden">
+                            <div>
+                                <label for="dlqQueueName" class="form-label block text-lg">Имя очереди</label>
+                                <input type="text" id="dlqQueueName" name="dlqSettings.queueName" class="form-input mt-1 block w-full shadow-sm sm:text-lg focus:ring-blue-200 focus:border-blue-200 border-blue-100 bg-white">
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Поведение DLQ</h4>
+                                <p class="text-lg text-gray-900">
+                                    Сообщения, не обработанные после всех попыток, будут отправлены в эту очередь для ручной проверки и повторной обработки.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="bg-blue-50 px-8 py-4 flex flex-row-reverse rounded-b-2xl border-t border-blue-100">
+            <button id="saveSettings" type="button" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-6 py-3 soft-btn text-lg font-bold hover:bg-blue-100 focus:outline-none ml-3 w-auto text-xl transition">
+                Сохранить
+            </button>
+            <button id="cancelSettings" type="button" class="w-full inline-flex justify-center rounded-xl border border-blue-100 shadow-sm px-6 py-3 bg-white text-lg font-bold text-gray-900 hover:bg-blue-100 focus:outline-none w-auto text-xl transition">
+                Отмена
+            </button>
+        </div>
+    </div>
+</div> 

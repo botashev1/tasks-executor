@@ -1,0 +1,49 @@
+<main class="flex-1 overflow-y-auto p-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-blue-100">
+                <thead class="soft-table-head">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 text-left text-lg font-bold uppercase tracking-wider text-gray-900">Имя</th>
+                        <th scope="col" class="px-6 py-4 text-left text-lg font-bold uppercase tracking-wider text-gray-900">Статус</th>
+                        <th scope="col" class="px-6 py-4 text-left text-lg font-bold uppercase tracking-wider text-gray-900">Логи</th>
+                        <th scope="col" class="px-6 py-4 text-left text-lg font-bold uppercase tracking-wider text-gray-900">Метрики</th>
+                        <th scope="col" class="px-6 py-4 text-left text-lg font-bold uppercase tracking-wider text-gray-900">DLQ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-blue-100" id="executorsTableBody">
+                    <!-- Executors will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="bg-blue-50 px-6 py-4 flex items-center justify-between border-t border-blue-100 sm:px-8">
+            <div class="flex-1 flex justify-between sm:hidden">
+                <button id="prevPageMobile" class="relative inline-flex items-center px-4 py-2 border border-blue-100 text-lg font-medium rounded-md text-gray-900 bg-white hover:bg-blue-50">
+                    Назад
+                </button>
+                <button id="nextPageMobile" class="ml-3 relative inline-flex items-center px-4 py-2 border border-blue-100 text-lg font-medium rounded-md text-gray-900 bg-white hover:bg-blue-50">
+                    Вперёд
+                </button>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-lg text-gray-900">
+                        Показано <span class="font-bold" id="startItem">1</span>–<span class="font-bold" id="endItem">20</span> из <span class="font-bold" id="totalItems">20</span> обработчиков
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Пагинация">
+                        <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-blue-100 bg-white text-lg font-medium text-gray-400 hover:bg-blue-50">
+                            <span class="sr-only">Назад</span>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-blue-100 bg-white text-lg font-medium text-gray-400 hover:bg-blue-50">
+                            <span class="sr-only">Вперёд</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</main> 

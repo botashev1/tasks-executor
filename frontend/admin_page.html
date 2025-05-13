@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Executor Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="assets/styles/main.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div id="header"></div>
+    <div id="executorsTable"></div>
+    <div id="executorDrawer"></div>
+    <div id="dlqModal"></div>
+
+    <script type="module">
+        import { loadComponent } from './assets/js/utils.js';
+        import { init } from './assets/js/main.js';
+        
+        // Load all components
+        async function loadAllComponents() {
+            try {
+                await Promise.all([
+                    loadComponent('header', './components/Header.html'),
+                    loadComponent('executorsTable', './components/ExecutorsTable.html'),
+                    loadComponent('executorDrawer', './components/ExecutorDrawer.html'),
+                    loadComponent('dlqModal', './components/DlqModal.html')
+                ]);
+                console.log('All components loaded successfully');
+                // Initialize the application after components are loaded
+                await init();
+            } catch (error) {
+                console.error('Error loading components:', error);
+            }
+        }
+
+        // Start loading components when the page is ready
+        document.addEventListener('DOMContentLoaded', loadAllComponents);
+    </script>
+</body>
+</html> 

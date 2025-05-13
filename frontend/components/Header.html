@@ -1,0 +1,20 @@
+<header class="soft-header shadow-lg py-6 px-8 flex items-center justify-between">
+    <h1 class="text-4xl font-extrabold text-white drop-shadow">Обработчики задач</h1>
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center space-x-2">
+            <label class="text-lg font-medium text-white">Фильтр:</label>
+            <select id="statusFilter" class="pl-3 pr-8 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white font-semibold text-lg text-gray-900">
+                <option value="all">Все статусы</option>
+                <option value="enabled">Только включённые</option>
+                <option value="disabled">Только отключённые</option>
+            </select>
+        </div>
+        <div class="relative">
+            <input type="text" id="searchInput" placeholder="Поиск обработчиков..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white font-semibold text-lg text-gray-900">
+            <i class="fas fa-search absolute left-3 top-3 text-gray-300"></i>
+        </div>
+        <button class="soft-btn px-6 py-2 rounded-xl shadow-lg focus:outline-none font-bold text-xl transition" type="button">
+            <i class="fas fa-plus mr-2"></i>Добавить обработчик
+        </button>
+    </div>
+</header> 

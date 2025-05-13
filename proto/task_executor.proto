@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package taskexecutor;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/yourusername/tasks-executor/proto";
+
+// Task Executor Service - Manager API
+service TaskExecutorManager {
+  // Task Management
+  rpc AddTask(AddTaskRequest) returns (AddTaskResponse) {
+    option (google.api.http) = {
+      post: "/v1/tasks"
+      body: "*"
+    };
+  }
+  rpc GetTaskStatus(GetTaskStatusRequest) returns (GetTaskStatusResponse) {
+    option (google.api.http) = {
+      get: "/v1/tasks/{id}/status"
+    };
+  }
+  
+  // Executor Management
+  rpc RegisterExecutor(RegisterExecutorRequest) returns (RegisterExecutorResponse);
+  rpc GetNextTask(GetNextTaskRequest) returns (GetNextTaskResponse) {
+    option (google.api.http) = {
+      get: "/v1/tasks/next"
+    };
+  }
+  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse) {
+    option (google.api.http) = {
+      put: "/v1/tasks/{id}/status"
+      body: "*"
+    };
+  }
+  
+  // Executor Configuration
+  rpc CreateExecutor(CreateExecutorRequest) returns (CreateExecutorResponse) {
+    option (google.api.http) = {
+      post: "/v1/executors"
+      body: "*"
+    };
+  }
+  rpc UpdateExecutor(UpdateExecutorRequest) returns (UpdateExecutorResponse) {
+    option (google.api.http) = {
+      put: "/v1/executors/{id}"
+      body: "*"
+    };
+  }
+  rpc GetExecutor(GetExecutorRequest) returns (GetExecutorResponse) {
+    option (google.api.http) = {
+      get: "/v1/executors/{id}"
+    };
+  }
+  rpc ListExecutors(ListExecutorsRequest) returns (ListExecutorsResponse) {
+    option (google.api.http) = {
+      get: "/v1/executors"
+    };
+  }
+}
+
+// Task Management Messages
+message AddTaskRequest {
+  string executor_name = 1;
+  bytes data = 2;
+  map<string, string> metadata = 3;
+}
+
+message AddTaskResponse {
+  Task task = 1;
+}
+
+message GetTaskStatusRequest {
+  string id = 1;
+}
+
+message GetTaskStatusResponse {
+  TaskStatus status = 1;
+  string error = 2;
+}
+
+// Executor Management Messages
+message RegisterExecutorRequest {
+  string executor_name = 1;
+  string leader_id = 2;
+}
+
+message RegisterExecutorResponse {
+  bool success = 1;
+}
+
+message GetNextTaskRequest {
+  string executor_name = 1;
+}
+
+message GetNextTaskResponse {
+  Task task = 1;
+}
+
+message UpdateTaskStatusRequest {
+  string id = 1;
+  TaskStatus status = 2;
+  string error = 3;
+}
+
+message UpdateTaskStatusResponse {
+  Task task = 1;
+}
+
+// Executor Configuration Messages
+message CreateExecutorRequest {
+  ExecutorConfig config = 1;
+}
+
+message CreateExecutorResponse {
+  Executor executor = 1;
+}
+
+message UpdateExecutorRequest {
+  string id = 1;
+  ExecutorConfig config = 2;
+}
+
+message UpdateExecutorResponse {
+  Executor executor = 1;
+}
+
+message GetExecutorRequest {
+  string id = 1;
+}
+
+message GetExecutorResponse {
+  Executor executor = 1;
+}
+
+message ListExecutorsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListExecutorsResponse {
+  repeated Executor executors = 1;
+  string next_page_token = 2;
+}
+
+// Common Messages
+message Executor {
+  string id = 1;
+  string name = 2;
+  bool enabled = 3;
+  ExecutorConfig config = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message ExecutorConfig {
+  string name = 1;
+  bool enabled = 2;
+  WriteConcern write_concern = 3;
+  RetryPolicy retry_policy = 4;
+  DLQConfig dlq_config = 5;
+}
+
+message WriteConcern {
+  WriteConcernLevel level = 1;
+}
+
+enum WriteConcernLevel {
+  WRITE_CONCERN_LEVEL_UNSPECIFIED = 0;
+  WRITE_CONCERN_REPLICA_ACKNOWLEDGED = 1;
+  WRITE_CONCERN_MAJORITY = 2;
+  WRITE_CONCERN_UNACKNOWLEDGED = 3;
+  WRITE_CONCERN_JOURNALED = 4;
+}
+
+message RetryPolicy {
+  RetryPolicyType type = 1;
+  int32 max_attempts = 2;
+  google.protobuf.Duration interval = 3;
+}
+
+enum RetryPolicyType {
+  RETRY_POLICY_TYPE_UNSPECIFIED = 0;
+  RETRY_POLICY_CONSTANT = 1;
+  RETRY_POLICY_LINEAR = 2;
+  RETRY_POLICY_EXPONENTIAL = 3;
+}
+
+message DLQConfig {
+  bool enabled = 1;
+  string queue_name = 2;
+}
+
+message Task {
+  string id = 1;
+  string executor_name = 2;
+  bytes data = 3;
+  map<string, string> metadata = 4;
+  TaskStatus status = 5;
+  string error = 6;
+  int32 retry_count = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp started_at = 10;
+  google.protobuf.Timestamp completed_at = 11;
+}
+
+enum TaskStatus {
+  TASK_STATUS_UNSPECIFIED = 0;
+  TASK_STATUS_PENDING = 1;
+  TASK_STATUS_IN_PROGRESS = 2;
+  TASK_STATUS_COMPLETED = 3;
+  TASK_STATUS_FAILED = 4;
+  TASK_STATUS_DLQ = 5;
+}
+
+// Order представляет заказ
+message Order {
+    string id = 1;
+    string user_id = 2;
+    repeated OrderItem items = 3;
+    double total = 4;
+    string status = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+// OrderItem представляет товар в заказе
+message OrderItem {
+    string product_id = 1;
+    int32 quantity = 2;
+    double price = 3;
+} 
