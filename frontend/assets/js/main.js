@@ -128,7 +128,7 @@ async function renderExecutors() {
             </td>
             <td class="px-6 py-4 whitespace-nowrap table-cell text-center">
                 ${
-                    executor.config && executor.config.dlqConfig && executor.config.dlqConfig.enabled
+                    executor.config && executor.config.dlq_config && executor.config.dlq_config.enabled
                     ? `<button title="DLQ"
                         class="dlq-btn flex items-center justify-center border border-blue-100 bg-white hover:bg-blue-100 text-blue-500 hover:text-blue-700 font-semibold w-32 h-10 rounded-xl shadow transition"
                         data-name="${executor.name}">
@@ -140,8 +140,8 @@ async function renderExecutors() {
         `;
         row.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
-            currentExecutorId = row.dataset.id;
-            openSettingsDrawer(currentExecutorId);
+            const executorName = row.querySelector('td:first-child span').textContent;
+            openSettingsDrawer(executorName);
         });
         executorsTableBody.appendChild(row);
     });
@@ -180,11 +180,11 @@ async function renderExecutors() {
 }
 
 // Open settings drawer
-async function openSettingsDrawer(executorId) {
+async function openSettingsDrawer(executorName) {
     isAddMode = false;
     try {
-        console.log('Opening settings drawer for executor:', executorId);
-        const executor = await getExecutor(executorId);
+        console.log('Opening settings drawer for executor:', executorName);
+        const executor = await getExecutor(executorName);
         if (!executor) {
             console.error('No executor data received');
             return;
@@ -192,7 +192,7 @@ async function openSettingsDrawer(executorId) {
         
         console.log('Opening settings for executor:', executor);
         
-        currentExecutorId = executorId;
+        currentExecutorId = executorName;
         const nameInput = document.getElementById('executorName');
         nameInput.value = executor.name;
         nameInput.readOnly = true;
@@ -208,28 +208,42 @@ async function openSettingsDrawer(executorId) {
             throw new Error('No config found in executor data');
         }
         
-        if (!config.retryPolicy || !config.dlqConfig || !config.writeConcern) {
+        if (!config.retry_policy || !config.dlq_config || !config.write_concern) {
             console.error('Missing required config fields:', config);
             throw new Error('Missing required config fields');
         }
         
-        const retryPolicyTypeValue = config.retryPolicy.type.toLowerCase();
+        // Convert numeric type to string representation
+        let retryPolicyTypeValue;
+        switch (config.retry_policy.type) {
+            case 1:
+                retryPolicyTypeValue = 'constant';
+                break;
+            case 2:
+                retryPolicyTypeValue = 'linear';
+                break;
+            case 3:
+                retryPolicyTypeValue = 'exponential';
+                break;
+            default:
+                retryPolicyTypeValue = 'constant';
+        }
         console.log('Setting retry policy type:', retryPolicyTypeValue);
         retryPolicyType.value = retryPolicyTypeValue;
         
-        retryPolicyMaxAttempts.value = config.retryPolicy.maxAttempts || '';
-        retryPolicyInterval.value = parseInt(config.retryPolicy.interval.replace('s', '000')) || 1000;
+        retryPolicyMaxAttempts.value = config.retry_policy.max_attempts || '';
+        retryPolicyInterval.value = parseInt(config.retry_policy.interval.seconds) * 1000 || 1000;
         retryPolicyPreview.innerHTML = updateRetryPolicyPreview(
             retryPolicyTypeValue,
-            config.retryPolicy.maxAttempts,
-            parseInt(config.retryPolicy.interval.replace('s', '000'))
+            config.retry_policy.max_attempts,
+            parseInt(config.retry_policy.interval.seconds) * 1000
         );
         
-        dlqEnabled.checked = config.dlqConfig.enabled;
-        toggleDlqSettings(config.dlqConfig.enabled);
-        document.getElementById('dlqQueueName').value = config.dlqConfig.queueName || '';
+        dlqEnabled.checked = config.dlq_config.enabled;
+        toggleDlqSettings(config.dlq_config.enabled);
+        document.getElementById('dlqQueueName').value = config.dlq_config.queue_name || '';
         
-        const writeConcernLevel = config.writeConcern.level.toLowerCase();
+        const writeConcernLevel = config.write_concern.level.toString();
         console.log('Setting write concern level:', writeConcernLevel);
         writeConcern.value = writeConcernLevel;
         
@@ -251,20 +265,38 @@ function closeSettingsDrawer() {
 // Save executor settings
 async function saveExecutorSettings() {
     try {
+        // Convert string type to numeric value
+        let retryPolicyTypeValue;
+        switch (retryPolicyType.value.toLowerCase()) {
+            case 'constant':
+                retryPolicyTypeValue = 1;
+                break;
+            case 'linear':
+                retryPolicyTypeValue = 2;
+                break;
+            case 'exponential':
+                retryPolicyTypeValue = 3;
+                break;
+            default:
+                retryPolicyTypeValue = 1;
+        }
+
         const config = {
             name: document.getElementById('executorName').value,
             enabled: document.getElementById('enabled').checked,
-            retryPolicy: {
-                type: retryPolicyType.value.toUpperCase(),
-                maxAttempts: retryPolicyMaxAttempts.value ? parseInt(retryPolicyMaxAttempts.value) : 0,
-                interval: retryPolicyInterval.value + 's'
+            retry_policy: {
+                type: retryPolicyTypeValue,
+                max_attempts: retryPolicyMaxAttempts.value ? parseInt(retryPolicyMaxAttempts.value) : 0,
+                interval: {
+                    seconds: parseInt(retryPolicyInterval.value) / 1000
+                }
             },
-            dlqConfig: {
+            dlq_config: {
                 enabled: dlqEnabled.checked,
-                queueName: dlqEnabled.checked ? document.getElementById('dlqQueueName').value : ''
+                queue_name: dlqEnabled.checked ? document.getElementById('dlqQueueName').value : ''
             },
-            writeConcern: {
-                level: document.getElementById('writeConcern').value.toUpperCase()
+            write_concern: {
+                level: parseInt(document.getElementById('writeConcern').value)
             }
         };
 

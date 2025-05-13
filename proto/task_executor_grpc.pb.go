@@ -4,7 +4,7 @@
 // - protoc             v5.29.3
 // source: proto/task_executor.proto
 
-package proto
+package taskexecutor
 
 import (
 	context "context"
@@ -28,6 +28,7 @@ const (
 	TaskExecutorManager_UpdateExecutor_FullMethodName   = "/taskexecutor.TaskExecutorManager/UpdateExecutor"
 	TaskExecutorManager_GetExecutor_FullMethodName      = "/taskexecutor.TaskExecutorManager/GetExecutor"
 	TaskExecutorManager_ListExecutors_FullMethodName    = "/taskexecutor.TaskExecutorManager/ListExecutors"
+	TaskExecutorManager_DeleteExecutor_FullMethodName   = "/taskexecutor.TaskExecutorManager/DeleteExecutor"
 )
 
 // TaskExecutorManagerClient is the client API for TaskExecutorManager service.
@@ -48,6 +49,7 @@ type TaskExecutorManagerClient interface {
 	UpdateExecutor(ctx context.Context, in *UpdateExecutorRequest, opts ...grpc.CallOption) (*UpdateExecutorResponse, error)
 	GetExecutor(ctx context.Context, in *GetExecutorRequest, opts ...grpc.CallOption) (*GetExecutorResponse, error)
 	ListExecutors(ctx context.Context, in *ListExecutorsRequest, opts ...grpc.CallOption) (*ListExecutorsResponse, error)
+	DeleteExecutor(ctx context.Context, in *DeleteExecutorRequest, opts ...grpc.CallOption) (*DeleteExecutorResponse, error)
 }
 
 type taskExecutorManagerClient struct {
@@ -148,6 +150,16 @@ func (c *taskExecutorManagerClient) ListExecutors(ctx context.Context, in *ListE
 	return out, nil
 }
 
+func (c *taskExecutorManagerClient) DeleteExecutor(ctx context.Context, in *DeleteExecutorRequest, opts ...grpc.CallOption) (*DeleteExecutorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteExecutorResponse)
+	err := c.cc.Invoke(ctx, TaskExecutorManager_DeleteExecutor_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TaskExecutorManagerServer is the server API for TaskExecutorManager service.
 // All implementations must embed UnimplementedTaskExecutorManagerServer
 // for forward compatibility.
@@ -166,6 +178,7 @@ type TaskExecutorManagerServer interface {
 	UpdateExecutor(context.Context, *UpdateExecutorRequest) (*UpdateExecutorResponse, error)
 	GetExecutor(context.Context, *GetExecutorRequest) (*GetExecutorResponse, error)
 	ListExecutors(context.Context, *ListExecutorsRequest) (*ListExecutorsResponse, error)
+	DeleteExecutor(context.Context, *DeleteExecutorRequest) (*DeleteExecutorResponse, error)
 	mustEmbedUnimplementedTaskExecutorManagerServer()
 }
 
@@ -202,6 +215,9 @@ func (UnimplementedTaskExecutorManagerServer) GetExecutor(context.Context, *GetE
 }
 func (UnimplementedTaskExecutorManagerServer) ListExecutors(context.Context, *ListExecutorsRequest) (*ListExecutorsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListExecutors not implemented")
+}
+func (UnimplementedTaskExecutorManagerServer) DeleteExecutor(context.Context, *DeleteExecutorRequest) (*DeleteExecutorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteExecutor not implemented")
 }
 func (UnimplementedTaskExecutorManagerServer) mustEmbedUnimplementedTaskExecutorManagerServer() {}
 func (UnimplementedTaskExecutorManagerServer) testEmbeddedByValue()                             {}
@@ -386,6 +402,24 @@ func _TaskExecutorManager_ListExecutors_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TaskExecutorManager_DeleteExecutor_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteExecutorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskExecutorManagerServer).DeleteExecutor(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TaskExecutorManager_DeleteExecutor_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskExecutorManagerServer).DeleteExecutor(ctx, req.(*DeleteExecutorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TaskExecutorManager_ServiceDesc is the grpc.ServiceDesc for TaskExecutorManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -428,6 +462,10 @@ var TaskExecutorManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListExecutors",
 			Handler:    _TaskExecutorManager_ListExecutors_Handler,
+		},
+		{
+			MethodName: "DeleteExecutor",
+			Handler:    _TaskExecutorManager_DeleteExecutor_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

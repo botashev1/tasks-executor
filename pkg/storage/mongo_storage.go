@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/yourusername/tasks-executor/pkg/models"
+	"github.com/botashev/tasks-executor/pkg/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

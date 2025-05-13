@@ -2,64 +2,28 @@ syntax = "proto3";
 
 package taskexecutor;
 
-import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
-option go_package = "github.com/yourusername/tasks-executor/proto";
+option go_package = "github.com/botashev/tasks-executor/proto/taskexecutor";
 
 // Task Executor Service - Manager API
 service TaskExecutorManager {
   // Task Management
-  rpc AddTask(AddTaskRequest) returns (AddTaskResponse) {
-    option (google.api.http) = {
-      post: "/v1/tasks"
-      body: "*"
-    };
-  }
-  rpc GetTaskStatus(GetTaskStatusRequest) returns (GetTaskStatusResponse) {
-    option (google.api.http) = {
-      get: "/v1/tasks/{id}/status"
-    };
-  }
+  rpc AddTask(AddTaskRequest) returns (AddTaskResponse);
+  rpc GetTaskStatus(GetTaskStatusRequest) returns (GetTaskStatusResponse);
   
   // Executor Management
   rpc RegisterExecutor(RegisterExecutorRequest) returns (RegisterExecutorResponse);
-  rpc GetNextTask(GetNextTaskRequest) returns (GetNextTaskResponse) {
-    option (google.api.http) = {
-      get: "/v1/tasks/next"
-    };
-  }
-  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse) {
-    option (google.api.http) = {
-      put: "/v1/tasks/{id}/status"
-      body: "*"
-    };
-  }
+  rpc GetNextTask(GetNextTaskRequest) returns (GetNextTaskResponse);
+  rpc UpdateTaskStatus(UpdateTaskStatusRequest) returns (UpdateTaskStatusResponse);
   
   // Executor Configuration
-  rpc CreateExecutor(CreateExecutorRequest) returns (CreateExecutorResponse) {
-    option (google.api.http) = {
-      post: "/v1/executors"
-      body: "*"
-    };
-  }
-  rpc UpdateExecutor(UpdateExecutorRequest) returns (UpdateExecutorResponse) {
-    option (google.api.http) = {
-      put: "/v1/executors/{id}"
-      body: "*"
-    };
-  }
-  rpc GetExecutor(GetExecutorRequest) returns (GetExecutorResponse) {
-    option (google.api.http) = {
-      get: "/v1/executors/{id}"
-    };
-  }
-  rpc ListExecutors(ListExecutorsRequest) returns (ListExecutorsResponse) {
-    option (google.api.http) = {
-      get: "/v1/executors"
-    };
-  }
+  rpc CreateExecutor(CreateExecutorRequest) returns (CreateExecutorResponse);
+  rpc UpdateExecutor(UpdateExecutorRequest) returns (UpdateExecutorResponse);
+  rpc GetExecutor(GetExecutorRequest) returns (GetExecutorResponse);
+  rpc ListExecutors(ListExecutorsRequest) returns (ListExecutorsResponse);
+  rpc DeleteExecutor(DeleteExecutorRequest) returns (DeleteExecutorResponse);
 }
 
 // Task Management Messages
@@ -144,6 +108,14 @@ message ListExecutorsRequest {
 message ListExecutorsResponse {
   repeated Executor executors = 1;
   string next_page_token = 2;
+}
+
+// Удаление executor
+message DeleteExecutorRequest {
+  string id = 1;
+}
+
+message DeleteExecutorResponse {
 }
 
 // Common Messages

@@ -4,10 +4,9 @@
 // 	protoc        v5.29.3
 // source: proto/task_executor.proto
 
-package proto
+package taskexecutor
 
 import (
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -1056,6 +1055,87 @@ func (x *ListExecutorsResponse) GetNextPageToken() string {
 	return ""
 }
 
+// Удаление executor
+type DeleteExecutorRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteExecutorRequest) Reset() {
+	*x = DeleteExecutorRequest{}
+	mi := &file_proto_task_executor_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteExecutorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteExecutorRequest) ProtoMessage() {}
+
+func (x *DeleteExecutorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_task_executor_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteExecutorRequest.ProtoReflect.Descriptor instead.
+func (*DeleteExecutorRequest) Descriptor() ([]byte, []int) {
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *DeleteExecutorRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeleteExecutorResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteExecutorResponse) Reset() {
+	*x = DeleteExecutorResponse{}
+	mi := &file_proto_task_executor_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteExecutorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteExecutorResponse) ProtoMessage() {}
+
+func (x *DeleteExecutorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_task_executor_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteExecutorResponse.ProtoReflect.Descriptor instead.
+func (*DeleteExecutorResponse) Descriptor() ([]byte, []int) {
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{19}
+}
+
 // Common Messages
 type Executor struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1071,7 +1151,7 @@ type Executor struct {
 
 func (x *Executor) Reset() {
 	*x = Executor{}
-	mi := &file_proto_task_executor_proto_msgTypes[18]
+	mi := &file_proto_task_executor_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1083,7 +1163,7 @@ func (x *Executor) String() string {
 func (*Executor) ProtoMessage() {}
 
 func (x *Executor) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[18]
+	mi := &file_proto_task_executor_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1096,7 +1176,7 @@ func (x *Executor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Executor.ProtoReflect.Descriptor instead.
 func (*Executor) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{18}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *Executor) GetId() string {
@@ -1154,7 +1234,7 @@ type ExecutorConfig struct {
 
 func (x *ExecutorConfig) Reset() {
 	*x = ExecutorConfig{}
-	mi := &file_proto_task_executor_proto_msgTypes[19]
+	mi := &file_proto_task_executor_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1166,7 +1246,7 @@ func (x *ExecutorConfig) String() string {
 func (*ExecutorConfig) ProtoMessage() {}
 
 func (x *ExecutorConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[19]
+	mi := &file_proto_task_executor_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1179,7 +1259,7 @@ func (x *ExecutorConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecutorConfig.ProtoReflect.Descriptor instead.
 func (*ExecutorConfig) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{19}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ExecutorConfig) GetName() string {
@@ -1226,7 +1306,7 @@ type WriteConcern struct {
 
 func (x *WriteConcern) Reset() {
 	*x = WriteConcern{}
-	mi := &file_proto_task_executor_proto_msgTypes[20]
+	mi := &file_proto_task_executor_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1238,7 +1318,7 @@ func (x *WriteConcern) String() string {
 func (*WriteConcern) ProtoMessage() {}
 
 func (x *WriteConcern) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[20]
+	mi := &file_proto_task_executor_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1251,7 +1331,7 @@ func (x *WriteConcern) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WriteConcern.ProtoReflect.Descriptor instead.
 func (*WriteConcern) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{20}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *WriteConcern) GetLevel() WriteConcernLevel {
@@ -1272,7 +1352,7 @@ type RetryPolicy struct {
 
 func (x *RetryPolicy) Reset() {
 	*x = RetryPolicy{}
-	mi := &file_proto_task_executor_proto_msgTypes[21]
+	mi := &file_proto_task_executor_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1284,7 +1364,7 @@ func (x *RetryPolicy) String() string {
 func (*RetryPolicy) ProtoMessage() {}
 
 func (x *RetryPolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[21]
+	mi := &file_proto_task_executor_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1297,7 +1377,7 @@ func (x *RetryPolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RetryPolicy.ProtoReflect.Descriptor instead.
 func (*RetryPolicy) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{21}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *RetryPolicy) GetType() RetryPolicyType {
@@ -1331,7 +1411,7 @@ type DLQConfig struct {
 
 func (x *DLQConfig) Reset() {
 	*x = DLQConfig{}
-	mi := &file_proto_task_executor_proto_msgTypes[22]
+	mi := &file_proto_task_executor_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1343,7 +1423,7 @@ func (x *DLQConfig) String() string {
 func (*DLQConfig) ProtoMessage() {}
 
 func (x *DLQConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[22]
+	mi := &file_proto_task_executor_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1356,7 +1436,7 @@ func (x *DLQConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DLQConfig.ProtoReflect.Descriptor instead.
 func (*DLQConfig) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{22}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DLQConfig) GetEnabled() bool {
@@ -1392,7 +1472,7 @@ type Task struct {
 
 func (x *Task) Reset() {
 	*x = Task{}
-	mi := &file_proto_task_executor_proto_msgTypes[23]
+	mi := &file_proto_task_executor_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1404,7 +1484,7 @@ func (x *Task) String() string {
 func (*Task) ProtoMessage() {}
 
 func (x *Task) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_task_executor_proto_msgTypes[23]
+	mi := &file_proto_task_executor_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1417,7 +1497,7 @@ func (x *Task) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Task.ProtoReflect.Descriptor instead.
 func (*Task) Descriptor() ([]byte, []int) {
-	return file_proto_task_executor_proto_rawDescGZIP(), []int{23}
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *Task) GetId() string {
@@ -1497,11 +1577,165 @@ func (x *Task) GetCompletedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// Order представляет заказ
+type Order struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Items         []*OrderItem           `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
+	Total         float64                `protobuf:"fixed64,4,opt,name=total,proto3" json:"total,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Order) Reset() {
+	*x = Order{}
+	mi := &file_proto_task_executor_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Order) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Order) ProtoMessage() {}
+
+func (x *Order) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_task_executor_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Order.ProtoReflect.Descriptor instead.
+func (*Order) Descriptor() ([]byte, []int) {
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *Order) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Order) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *Order) GetItems() []*OrderItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *Order) GetTotal() float64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *Order) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Order) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *Order) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+// OrderItem представляет товар в заказе
+type OrderItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Price         float64                `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderItem) Reset() {
+	*x = OrderItem{}
+	mi := &file_proto_task_executor_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderItem) ProtoMessage() {}
+
+func (x *OrderItem) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_task_executor_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderItem.ProtoReflect.Descriptor instead.
+func (*OrderItem) Descriptor() ([]byte, []int) {
+	return file_proto_task_executor_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *OrderItem) GetProductId() string {
+	if x != nil {
+		return x.ProductId
+	}
+	return ""
+}
+
+func (x *OrderItem) GetQuantity() int32 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *OrderItem) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
 var File_proto_task_executor_proto protoreflect.FileDescriptor
 
 const file_proto_task_executor_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/task_executor.proto\x12\ftaskexecutor\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\"\xce\x01\n" +
+	"\x19proto/task_executor.proto\x12\ftaskexecutor\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\"\xce\x01\n" +
 	"\x0eAddTaskRequest\x12#\n" +
 	"\rexecutor_name\x18\x01 \x01(\tR\fexecutorName\x12\x12\n" +
 	"\x04data\x18\x02 \x01(\fR\x04data\x12F\n" +
@@ -1550,7 +1784,10 @@ const file_proto_task_executor_proto_rawDesc = "" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\"u\n" +
 	"\x15ListExecutorsResponse\x124\n" +
 	"\texecutors\x18\x01 \x03(\v2\x16.taskexecutor.ExecutorR\texecutors\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"\xf4\x01\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"'\n" +
+	"\x15DeleteExecutorRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x18\n" +
+	"\x16DeleteExecutorResponse\"\xf4\x01\n" +
 	"\bExecutor\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
@@ -1596,7 +1833,22 @@ const file_proto_task_executor_proto_rawDesc = "" +
 	"\fcompleted_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*\xbb\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x83\x02\n" +
+	"\x05Order\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12-\n" +
+	"\x05items\x18\x03 \x03(\v2\x17.taskexecutor.OrderItemR\x05items\x12\x14\n" +
+	"\x05total\x18\x04 \x01(\x01R\x05total\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\tR\x06status\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\\\n" +
+	"\tOrderItem\x12\x1d\n" +
+	"\n" +
+	"product_id\x18\x01 \x01(\tR\tproductId\x12\x1a\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\x12\x14\n" +
+	"\x05price\x18\x03 \x01(\x01R\x05price*\xbb\x01\n" +
 	"\x11WriteConcernLevel\x12#\n" +
 	"\x1fWRITE_CONCERN_LEVEL_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"WRITE_CONCERN_REPLICA_ACKNOWLEDGED\x10\x01\x12\x1a\n" +
@@ -1615,17 +1867,18 @@ const file_proto_task_executor_proto_rawDesc = "" +
 	"\x17TASK_STATUS_IN_PROGRESS\x10\x02\x12\x19\n" +
 	"\x15TASK_STATUS_COMPLETED\x10\x03\x12\x16\n" +
 	"\x12TASK_STATUS_FAILED\x10\x04\x12\x13\n" +
-	"\x0fTASK_STATUS_DLQ\x10\x052\x95\b\n" +
-	"\x13TaskExecutorManager\x12\\\n" +
-	"\aAddTask\x12\x1c.taskexecutor.AddTaskRequest\x1a\x1d.taskexecutor.AddTaskResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/tasks\x12w\n" +
-	"\rGetTaskStatus\x12\".taskexecutor.GetTaskStatusRequest\x1a#.taskexecutor.GetTaskStatusResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/tasks/{id}/status\x12a\n" +
-	"\x10RegisterExecutor\x12%.taskexecutor.RegisterExecutorRequest\x1a&.taskexecutor.RegisterExecutorResponse\x12j\n" +
-	"\vGetNextTask\x12 .taskexecutor.GetNextTaskRequest\x1a!.taskexecutor.GetNextTaskResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/tasks/next\x12\x83\x01\n" +
-	"\x10UpdateTaskStatus\x12%.taskexecutor.UpdateTaskStatusRequest\x1a&.taskexecutor.UpdateTaskStatusResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/v1/tasks/{id}/status\x12u\n" +
-	"\x0eCreateExecutor\x12#.taskexecutor.CreateExecutorRequest\x1a$.taskexecutor.CreateExecutorResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/executors\x12z\n" +
-	"\x0eUpdateExecutor\x12#.taskexecutor.UpdateExecutorRequest\x1a$.taskexecutor.UpdateExecutorResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\x1a\x12/v1/executors/{id}\x12n\n" +
-	"\vGetExecutor\x12 .taskexecutor.GetExecutorRequest\x1a!.taskexecutor.GetExecutorResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/v1/executors/{id}\x12o\n" +
-	"\rListExecutors\x12\".taskexecutor.ListExecutorsRequest\x1a#.taskexecutor.ListExecutorsResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1/executorsB.Z,github.com/yourusername/tasks-executor/protob\x06proto3"
+	"\x0fTASK_STATUS_DLQ\x10\x052\x96\a\n" +
+	"\x13TaskExecutorManager\x12F\n" +
+	"\aAddTask\x12\x1c.taskexecutor.AddTaskRequest\x1a\x1d.taskexecutor.AddTaskResponse\x12X\n" +
+	"\rGetTaskStatus\x12\".taskexecutor.GetTaskStatusRequest\x1a#.taskexecutor.GetTaskStatusResponse\x12a\n" +
+	"\x10RegisterExecutor\x12%.taskexecutor.RegisterExecutorRequest\x1a&.taskexecutor.RegisterExecutorResponse\x12R\n" +
+	"\vGetNextTask\x12 .taskexecutor.GetNextTaskRequest\x1a!.taskexecutor.GetNextTaskResponse\x12a\n" +
+	"\x10UpdateTaskStatus\x12%.taskexecutor.UpdateTaskStatusRequest\x1a&.taskexecutor.UpdateTaskStatusResponse\x12[\n" +
+	"\x0eCreateExecutor\x12#.taskexecutor.CreateExecutorRequest\x1a$.taskexecutor.CreateExecutorResponse\x12[\n" +
+	"\x0eUpdateExecutor\x12#.taskexecutor.UpdateExecutorRequest\x1a$.taskexecutor.UpdateExecutorResponse\x12R\n" +
+	"\vGetExecutor\x12 .taskexecutor.GetExecutorRequest\x1a!.taskexecutor.GetExecutorResponse\x12X\n" +
+	"\rListExecutors\x12\".taskexecutor.ListExecutorsRequest\x1a#.taskexecutor.ListExecutorsResponse\x12[\n" +
+	"\x0eDeleteExecutor\x12#.taskexecutor.DeleteExecutorRequest\x1a$.taskexecutor.DeleteExecutorResponseB7Z5github.com/botashev/tasks-executor/proto/taskexecutorb\x06proto3"
 
 var (
 	file_proto_task_executor_proto_rawDescOnce sync.Once
@@ -1640,7 +1893,7 @@ func file_proto_task_executor_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_task_executor_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_proto_task_executor_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_proto_task_executor_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_proto_task_executor_proto_goTypes = []any{
 	(WriteConcernLevel)(0),           // 0: taskexecutor.WriteConcernLevel
 	(RetryPolicyType)(0),             // 1: taskexecutor.RetryPolicyType
@@ -1663,68 +1916,77 @@ var file_proto_task_executor_proto_goTypes = []any{
 	(*GetExecutorResponse)(nil),      // 18: taskexecutor.GetExecutorResponse
 	(*ListExecutorsRequest)(nil),     // 19: taskexecutor.ListExecutorsRequest
 	(*ListExecutorsResponse)(nil),    // 20: taskexecutor.ListExecutorsResponse
-	(*Executor)(nil),                 // 21: taskexecutor.Executor
-	(*ExecutorConfig)(nil),           // 22: taskexecutor.ExecutorConfig
-	(*WriteConcern)(nil),             // 23: taskexecutor.WriteConcern
-	(*RetryPolicy)(nil),              // 24: taskexecutor.RetryPolicy
-	(*DLQConfig)(nil),                // 25: taskexecutor.DLQConfig
-	(*Task)(nil),                     // 26: taskexecutor.Task
-	nil,                              // 27: taskexecutor.AddTaskRequest.MetadataEntry
-	nil,                              // 28: taskexecutor.Task.MetadataEntry
-	(*timestamppb.Timestamp)(nil),    // 29: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),      // 30: google.protobuf.Duration
+	(*DeleteExecutorRequest)(nil),    // 21: taskexecutor.DeleteExecutorRequest
+	(*DeleteExecutorResponse)(nil),   // 22: taskexecutor.DeleteExecutorResponse
+	(*Executor)(nil),                 // 23: taskexecutor.Executor
+	(*ExecutorConfig)(nil),           // 24: taskexecutor.ExecutorConfig
+	(*WriteConcern)(nil),             // 25: taskexecutor.WriteConcern
+	(*RetryPolicy)(nil),              // 26: taskexecutor.RetryPolicy
+	(*DLQConfig)(nil),                // 27: taskexecutor.DLQConfig
+	(*Task)(nil),                     // 28: taskexecutor.Task
+	(*Order)(nil),                    // 29: taskexecutor.Order
+	(*OrderItem)(nil),                // 30: taskexecutor.OrderItem
+	nil,                              // 31: taskexecutor.AddTaskRequest.MetadataEntry
+	nil,                              // 32: taskexecutor.Task.MetadataEntry
+	(*timestamppb.Timestamp)(nil),    // 33: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),      // 34: google.protobuf.Duration
 }
 var file_proto_task_executor_proto_depIdxs = []int32{
-	27, // 0: taskexecutor.AddTaskRequest.metadata:type_name -> taskexecutor.AddTaskRequest.MetadataEntry
-	26, // 1: taskexecutor.AddTaskResponse.task:type_name -> taskexecutor.Task
+	31, // 0: taskexecutor.AddTaskRequest.metadata:type_name -> taskexecutor.AddTaskRequest.MetadataEntry
+	28, // 1: taskexecutor.AddTaskResponse.task:type_name -> taskexecutor.Task
 	2,  // 2: taskexecutor.GetTaskStatusResponse.status:type_name -> taskexecutor.TaskStatus
-	26, // 3: taskexecutor.GetNextTaskResponse.task:type_name -> taskexecutor.Task
+	28, // 3: taskexecutor.GetNextTaskResponse.task:type_name -> taskexecutor.Task
 	2,  // 4: taskexecutor.UpdateTaskStatusRequest.status:type_name -> taskexecutor.TaskStatus
-	26, // 5: taskexecutor.UpdateTaskStatusResponse.task:type_name -> taskexecutor.Task
-	22, // 6: taskexecutor.CreateExecutorRequest.config:type_name -> taskexecutor.ExecutorConfig
-	21, // 7: taskexecutor.CreateExecutorResponse.executor:type_name -> taskexecutor.Executor
-	22, // 8: taskexecutor.UpdateExecutorRequest.config:type_name -> taskexecutor.ExecutorConfig
-	21, // 9: taskexecutor.UpdateExecutorResponse.executor:type_name -> taskexecutor.Executor
-	21, // 10: taskexecutor.GetExecutorResponse.executor:type_name -> taskexecutor.Executor
-	21, // 11: taskexecutor.ListExecutorsResponse.executors:type_name -> taskexecutor.Executor
-	22, // 12: taskexecutor.Executor.config:type_name -> taskexecutor.ExecutorConfig
-	29, // 13: taskexecutor.Executor.created_at:type_name -> google.protobuf.Timestamp
-	29, // 14: taskexecutor.Executor.updated_at:type_name -> google.protobuf.Timestamp
-	23, // 15: taskexecutor.ExecutorConfig.write_concern:type_name -> taskexecutor.WriteConcern
-	24, // 16: taskexecutor.ExecutorConfig.retry_policy:type_name -> taskexecutor.RetryPolicy
-	25, // 17: taskexecutor.ExecutorConfig.dlq_config:type_name -> taskexecutor.DLQConfig
+	28, // 5: taskexecutor.UpdateTaskStatusResponse.task:type_name -> taskexecutor.Task
+	24, // 6: taskexecutor.CreateExecutorRequest.config:type_name -> taskexecutor.ExecutorConfig
+	23, // 7: taskexecutor.CreateExecutorResponse.executor:type_name -> taskexecutor.Executor
+	24, // 8: taskexecutor.UpdateExecutorRequest.config:type_name -> taskexecutor.ExecutorConfig
+	23, // 9: taskexecutor.UpdateExecutorResponse.executor:type_name -> taskexecutor.Executor
+	23, // 10: taskexecutor.GetExecutorResponse.executor:type_name -> taskexecutor.Executor
+	23, // 11: taskexecutor.ListExecutorsResponse.executors:type_name -> taskexecutor.Executor
+	24, // 12: taskexecutor.Executor.config:type_name -> taskexecutor.ExecutorConfig
+	33, // 13: taskexecutor.Executor.created_at:type_name -> google.protobuf.Timestamp
+	33, // 14: taskexecutor.Executor.updated_at:type_name -> google.protobuf.Timestamp
+	25, // 15: taskexecutor.ExecutorConfig.write_concern:type_name -> taskexecutor.WriteConcern
+	26, // 16: taskexecutor.ExecutorConfig.retry_policy:type_name -> taskexecutor.RetryPolicy
+	27, // 17: taskexecutor.ExecutorConfig.dlq_config:type_name -> taskexecutor.DLQConfig
 	0,  // 18: taskexecutor.WriteConcern.level:type_name -> taskexecutor.WriteConcernLevel
 	1,  // 19: taskexecutor.RetryPolicy.type:type_name -> taskexecutor.RetryPolicyType
-	30, // 20: taskexecutor.RetryPolicy.interval:type_name -> google.protobuf.Duration
-	28, // 21: taskexecutor.Task.metadata:type_name -> taskexecutor.Task.MetadataEntry
+	34, // 20: taskexecutor.RetryPolicy.interval:type_name -> google.protobuf.Duration
+	32, // 21: taskexecutor.Task.metadata:type_name -> taskexecutor.Task.MetadataEntry
 	2,  // 22: taskexecutor.Task.status:type_name -> taskexecutor.TaskStatus
-	29, // 23: taskexecutor.Task.created_at:type_name -> google.protobuf.Timestamp
-	29, // 24: taskexecutor.Task.updated_at:type_name -> google.protobuf.Timestamp
-	29, // 25: taskexecutor.Task.started_at:type_name -> google.protobuf.Timestamp
-	29, // 26: taskexecutor.Task.completed_at:type_name -> google.protobuf.Timestamp
-	3,  // 27: taskexecutor.TaskExecutorManager.AddTask:input_type -> taskexecutor.AddTaskRequest
-	5,  // 28: taskexecutor.TaskExecutorManager.GetTaskStatus:input_type -> taskexecutor.GetTaskStatusRequest
-	7,  // 29: taskexecutor.TaskExecutorManager.RegisterExecutor:input_type -> taskexecutor.RegisterExecutorRequest
-	9,  // 30: taskexecutor.TaskExecutorManager.GetNextTask:input_type -> taskexecutor.GetNextTaskRequest
-	11, // 31: taskexecutor.TaskExecutorManager.UpdateTaskStatus:input_type -> taskexecutor.UpdateTaskStatusRequest
-	13, // 32: taskexecutor.TaskExecutorManager.CreateExecutor:input_type -> taskexecutor.CreateExecutorRequest
-	15, // 33: taskexecutor.TaskExecutorManager.UpdateExecutor:input_type -> taskexecutor.UpdateExecutorRequest
-	17, // 34: taskexecutor.TaskExecutorManager.GetExecutor:input_type -> taskexecutor.GetExecutorRequest
-	19, // 35: taskexecutor.TaskExecutorManager.ListExecutors:input_type -> taskexecutor.ListExecutorsRequest
-	4,  // 36: taskexecutor.TaskExecutorManager.AddTask:output_type -> taskexecutor.AddTaskResponse
-	6,  // 37: taskexecutor.TaskExecutorManager.GetTaskStatus:output_type -> taskexecutor.GetTaskStatusResponse
-	8,  // 38: taskexecutor.TaskExecutorManager.RegisterExecutor:output_type -> taskexecutor.RegisterExecutorResponse
-	10, // 39: taskexecutor.TaskExecutorManager.GetNextTask:output_type -> taskexecutor.GetNextTaskResponse
-	12, // 40: taskexecutor.TaskExecutorManager.UpdateTaskStatus:output_type -> taskexecutor.UpdateTaskStatusResponse
-	14, // 41: taskexecutor.TaskExecutorManager.CreateExecutor:output_type -> taskexecutor.CreateExecutorResponse
-	16, // 42: taskexecutor.TaskExecutorManager.UpdateExecutor:output_type -> taskexecutor.UpdateExecutorResponse
-	18, // 43: taskexecutor.TaskExecutorManager.GetExecutor:output_type -> taskexecutor.GetExecutorResponse
-	20, // 44: taskexecutor.TaskExecutorManager.ListExecutors:output_type -> taskexecutor.ListExecutorsResponse
-	36, // [36:45] is the sub-list for method output_type
-	27, // [27:36] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	33, // 23: taskexecutor.Task.created_at:type_name -> google.protobuf.Timestamp
+	33, // 24: taskexecutor.Task.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 25: taskexecutor.Task.started_at:type_name -> google.protobuf.Timestamp
+	33, // 26: taskexecutor.Task.completed_at:type_name -> google.protobuf.Timestamp
+	30, // 27: taskexecutor.Order.items:type_name -> taskexecutor.OrderItem
+	33, // 28: taskexecutor.Order.created_at:type_name -> google.protobuf.Timestamp
+	33, // 29: taskexecutor.Order.updated_at:type_name -> google.protobuf.Timestamp
+	3,  // 30: taskexecutor.TaskExecutorManager.AddTask:input_type -> taskexecutor.AddTaskRequest
+	5,  // 31: taskexecutor.TaskExecutorManager.GetTaskStatus:input_type -> taskexecutor.GetTaskStatusRequest
+	7,  // 32: taskexecutor.TaskExecutorManager.RegisterExecutor:input_type -> taskexecutor.RegisterExecutorRequest
+	9,  // 33: taskexecutor.TaskExecutorManager.GetNextTask:input_type -> taskexecutor.GetNextTaskRequest
+	11, // 34: taskexecutor.TaskExecutorManager.UpdateTaskStatus:input_type -> taskexecutor.UpdateTaskStatusRequest
+	13, // 35: taskexecutor.TaskExecutorManager.CreateExecutor:input_type -> taskexecutor.CreateExecutorRequest
+	15, // 36: taskexecutor.TaskExecutorManager.UpdateExecutor:input_type -> taskexecutor.UpdateExecutorRequest
+	17, // 37: taskexecutor.TaskExecutorManager.GetExecutor:input_type -> taskexecutor.GetExecutorRequest
+	19, // 38: taskexecutor.TaskExecutorManager.ListExecutors:input_type -> taskexecutor.ListExecutorsRequest
+	21, // 39: taskexecutor.TaskExecutorManager.DeleteExecutor:input_type -> taskexecutor.DeleteExecutorRequest
+	4,  // 40: taskexecutor.TaskExecutorManager.AddTask:output_type -> taskexecutor.AddTaskResponse
+	6,  // 41: taskexecutor.TaskExecutorManager.GetTaskStatus:output_type -> taskexecutor.GetTaskStatusResponse
+	8,  // 42: taskexecutor.TaskExecutorManager.RegisterExecutor:output_type -> taskexecutor.RegisterExecutorResponse
+	10, // 43: taskexecutor.TaskExecutorManager.GetNextTask:output_type -> taskexecutor.GetNextTaskResponse
+	12, // 44: taskexecutor.TaskExecutorManager.UpdateTaskStatus:output_type -> taskexecutor.UpdateTaskStatusResponse
+	14, // 45: taskexecutor.TaskExecutorManager.CreateExecutor:output_type -> taskexecutor.CreateExecutorResponse
+	16, // 46: taskexecutor.TaskExecutorManager.UpdateExecutor:output_type -> taskexecutor.UpdateExecutorResponse
+	18, // 47: taskexecutor.TaskExecutorManager.GetExecutor:output_type -> taskexecutor.GetExecutorResponse
+	20, // 48: taskexecutor.TaskExecutorManager.ListExecutors:output_type -> taskexecutor.ListExecutorsResponse
+	22, // 49: taskexecutor.TaskExecutorManager.DeleteExecutor:output_type -> taskexecutor.DeleteExecutorResponse
+	40, // [40:50] is the sub-list for method output_type
+	30, // [30:40] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_proto_task_executor_proto_init() }
@@ -1738,7 +2000,7 @@ func file_proto_task_executor_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_task_executor_proto_rawDesc), len(file_proto_task_executor_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   26,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

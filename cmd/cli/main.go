@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	pb "github.com/yourusername/tasks-executor/proto"
+	pb "github.com/botashev/tasks-executor/proto"
 	"google.golang.org/grpc"
 )
 

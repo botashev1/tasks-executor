@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"github.com/yourusername/tasks-executor/pkg/models"
+	"github.com/botashev/tasks-executor/pkg/models"
 )
 
 // Storage defines the interface for task and executor storage

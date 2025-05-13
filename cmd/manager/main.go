@@ -1,16 +1,17 @@
 package main
 
 import (
-	"context"
+	"encoding/json"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/yourusername/tasks-executor/pkg/manager"
-	"github.com/yourusername/tasks-executor/pkg/storage"
-	pb "github.com/yourusername/tasks-executor/proto"
+	pb "github.com/botashev/tasks-executor/proto"
+
+	"github.com/botashev/tasks-executor/pkg/manager"
+	"github.com/botashev/tasks-executor/pkg/storage"
 	"google.golang.org/grpc"
 )
 
@@ -56,19 +57,129 @@ func main() {
 	}
 	log.Println("Manager gRPC server listening on :50051")
 
-	// REST gateway
+	// HTTP server для фронтенда
 	go func() {
-		ctx := context.Background()
-		mux := runtime.NewServeMux()
-		opts := []grpc.DialOption{grpc.WithInsecure()}
-		if err := pb.RegisterTaskExecutorManagerHandlerFromEndpoint(ctx, mux, ":50051", opts); err != nil {
-			log.Fatalf("failed to start HTTP gateway: %v", err)
-		}
+		// Новый ServeMux для объединения API и статики
+		mux := http.NewServeMux()
+		// admin_page.html отдаётся по / и /admin_page.html
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == "/" || r.URL.Path == "/admin_page.html" {
+				http.ServeFile(w, r, "./frontend/admin_page.html")
+				return
+			}
+			http.NotFound(w, r)
+		})
+		// Остальные файлы (assets, components) отдаются по своим путям
+		mux.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./frontend/assets"))))
+		mux.Handle("/components/", http.StripPrefix("/components", http.FileServer(http.Dir("./frontend/components"))))
 
-		// Wrap the mux with CORS middleware
+		// API routes
+		api := http.NewServeMux()
+		api.HandleFunc("/executors", func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("Received request: %s %s", r.Method, r.URL.Path)
+			if r.Method == http.MethodGet {
+				// Get all executors
+				resp, err := service.ListExecutors(r.Context(), &pb.ListExecutorsRequest{})
+				if err != nil {
+					log.Printf("Error listing executors: %v", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(resp)
+			} else if r.Method == http.MethodPost {
+				// Create new executor
+				var req pb.CreateExecutorRequest
+				if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+					log.Printf("Error decoding request: %v", err)
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				created, err := service.CreateExecutor(r.Context(), &req)
+				if err != nil {
+					log.Printf("Error creating executor: %v", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(created)
+			}
+		})
+
+		api.HandleFunc("/executors/", func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("Received request: %s %s", r.Method, r.URL.Path)
+			if r.URL.Path == "/executors/" {
+				if r.Method == http.MethodGet {
+					resp, err := service.ListExecutors(r.Context(), &pb.ListExecutorsRequest{})
+					if err != nil {
+						log.Printf("Error listing executors: %v", err)
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(resp)
+					return
+				}
+				// Можно добавить POST для создания, если нужно
+			}
+
+			// Новый универсальный способ извлечения id
+			id := strings.TrimPrefix(r.URL.Path, "/executors/")
+			id = strings.TrimSuffix(id, "/")
+			if id == "" {
+				http.Error(w, "Executor id required", http.StatusBadRequest)
+				return
+			}
+			log.Printf("Processing request for executor: %s", id)
+
+			switch r.Method {
+			case http.MethodGet:
+				resp, err := service.GetExecutor(r.Context(), &pb.GetExecutorRequest{Id: id})
+				if err != nil {
+					log.Printf("Error getting executor: %v", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(resp)
+			case http.MethodPut:
+				var req pb.UpdateExecutorRequest
+				if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+					log.Printf("Error decoding request: %v", err)
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+				req.Id = id
+				updated, err := service.UpdateExecutor(r.Context(), &req)
+				if err != nil {
+					log.Printf("Error updating executor: %v", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(updated)
+			case http.MethodDelete:
+				_, err := service.DeleteExecutor(r.Context(), &pb.DeleteExecutorRequest{Id: id})
+				if err != nil {
+					log.Printf("Error deleting executor: %v", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				w.WriteHeader(http.StatusNoContent)
+			}
+		})
+
+		// Mount API routes with logging
+		apiHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("API request received: %s %s", r.Method, r.URL.Path)
+			http.StripPrefix("/api/v1", corsMiddleware(api)).ServeHTTP(w, r)
+		})
+		mux.Handle("/api/v1/", apiHandler)
+
+		// Оборачиваем всё в CORS middleware
 		handler := corsMiddleware(mux)
 
-		log.Println("REST API listening on :8080")
+		log.Println("Frontend available at http://localhost:8080")
 		if err := http.ListenAndServe(":8080", handler); err != nil {
 			log.Fatalf("failed to serve HTTP: %v", err)
 		}

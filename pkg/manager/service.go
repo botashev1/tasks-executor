@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yourusername/tasks-executor/pkg/models"
-	"github.com/yourusername/tasks-executor/pkg/storage"
-	pb "github.com/yourusername/tasks-executor/proto"
+	"github.com/botashev/tasks-executor/pkg/models"
+	"github.com/botashev/tasks-executor/pkg/storage"
+	pb "github.com/botashev/tasks-executor/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -209,22 +209,17 @@ func (s *Service) UpdateExecutor(ctx context.Context, req *pb.UpdateExecutorRequ
 }
 
 func (s *Service) GetExecutor(ctx context.Context, req *pb.GetExecutorRequest) (*pb.GetExecutorResponse, error) {
-	// Получаем список всех обработчиков
-	executors, err := s.storage.ListExecutors(ctx)
+	executor, err := s.storage.GetExecutor(ctx, req.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-
-	// Ищем обработчик по id
-	for _, executor := range executors {
-		if executor.ID.Hex() == req.Id {
-			return &pb.GetExecutorResponse{
-				Executor: convertExecutorToProto(executor),
-			}, nil
-		}
+	if executor == nil {
+		return nil, status.Error(codes.NotFound, "executor not found")
 	}
 
-	return nil, status.Error(codes.NotFound, "executor not found")
+	return &pb.GetExecutorResponse{
+		Executor: convertExecutorToProto(executor),
+	}, nil
 }
 
 func (s *Service) ListExecutors(ctx context.Context, req *pb.ListExecutorsRequest) (*pb.ListExecutorsResponse, error) {
@@ -239,6 +234,17 @@ func (s *Service) ListExecutors(ctx context.Context, req *pb.ListExecutorsReques
 	return &pb.ListExecutorsResponse{
 		Executors: result,
 	}, nil
+}
+
+// DeleteExecutor deletes an executor by its name (id)
+func (s *Service) DeleteExecutor(ctx context.Context, req *pb.DeleteExecutorRequest) (*pb.DeleteExecutorResponse, error) {
+	if req == nil || req.Id == "" {
+		return nil, status.Error(codes.InvalidArgument, "id is required")
+	}
+	if err := s.storage.DeleteExecutor(ctx, req.Id); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.DeleteExecutorResponse{}, nil
 }
 
 // Helper functions

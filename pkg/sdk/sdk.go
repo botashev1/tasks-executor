@@ -1,7 +1,7 @@
 package sdk
 
 import (
-	"github.com/yourusername/tasks-executor/pkg/models"
+	"github.com/botashev/tasks-executor/pkg/models"
 )
 
 // TaskProcessor is an interface for custom task handlers

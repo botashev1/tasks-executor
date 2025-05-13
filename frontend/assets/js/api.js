@@ -1,5 +1,5 @@
 // API endpoints
-const API_BASE = 'http://localhost:8080/v1';
+const API_BASE = '/api/v1';
 
 // API functions
 async function fetchExecutors() {
@@ -51,10 +51,10 @@ async function updateExecutor(executorId, config) {
     }
 }
 
-async function getExecutor(id) {
+async function getExecutor(name) {
     try {
-        console.log('Fetching executor with id:', id);
-        const response = await fetch(`${API_BASE}/executors/${id}`);
+        console.log('Fetching executor with name:', name);
+        const response = await fetch(`${API_BASE}/executors/${name}`);
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Server response:', response.status, errorText);
